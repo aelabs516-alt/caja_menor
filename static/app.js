@@ -179,6 +179,19 @@ const SEED_DATA = {
 };
 
 // Estado en memoria principal
+// Override fetch para asegurar que siempre envíe las cookies de sesión
+const originalFetch = window.fetch;
+window.fetch = function() {
+    let [resource, config] = arguments;
+    if (config == null) {
+        config = {};
+    }
+    if (config.credentials == null) {
+        config.credentials = 'same-origin';
+    }
+    return originalFetch(resource, config);
+};
+
 let state = {
     usuarios: [],    // Usuarios del sistema
     currentUser: null, // Usuario actual logueado

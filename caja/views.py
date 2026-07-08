@@ -10,15 +10,17 @@ from .models import PerfilUsuario, Colaborador, RegistroCaja, PagoPendiente, Efe
 
 # Seeding function to create users on first request if they don't exist
 def seed_users_if_empty():
-    if not User.objects.filter(username='admin').exists():
-        u1 = User.objects.create_user(username='admin', password='admin', first_name='Falcon (Administrador)')
+    if not User.objects.filter(username='Falcon').exists() or not User.objects.filter(username='admin').exists():
+        # Clear all users (cascade deletes PerfilUsuario)
+        User.objects.all().delete()
+        
+        # Create Andres Correa (Falcon)
+        u1 = User.objects.create_user(username='Falcon', password='900928Aa!', first_name='Andres Correa')
         PerfilUsuario.objects.get_or_create(user=u1, rol='Administrador')
-    if not User.objects.filter(username='invitado').exists():
-        u2 = User.objects.create_user(username='invitado', password='123', first_name='Liliana Giraldo')
-        PerfilUsuario.objects.get_or_create(user=u2, rol='Visualización')
-    if not User.objects.filter(username='operador').exists():
-        u3 = User.objects.create_user(username='operador', password='caja', first_name='Camilo (Operador Caja)')
-        PerfilUsuario.objects.get_or_create(user=u3, rol='Operador de Módulo', modulo='modulo1')
+        
+        # Create admin (admin)
+        u2 = User.objects.create_user(username='admin', password='123456', first_name='admin')
+        PerfilUsuario.objects.get_or_create(user=u2, rol='Administrador')
 
 # Main Template Render View
 def index_view(request):

@@ -34,12 +34,6 @@ const DEFAULT_CONFIG = {
     }
 };
 
-// Usuarios semilla
-const SEED_USERS = [
-    { id: "u1", nombre: "Falcon (Administrador)", usuario: "admin", contrasena: "admin", rol: "Administrador" },
-    { id: "u2", nombre: "Liliana (Visualizadora)", usuario: "invitado", contrasena: "123", rol: "Visualización" },
-    { id: "u3", nombre: "Camilo (Operador Caja)", usuario: "operador", contrasena: "caja", rol: "Operador de Módulo", modulo: "modulo1" }
-];
 
 // Datos semilla de terceros y transacciones financieras
 const SEED_DATA = {
@@ -477,7 +471,7 @@ function setupSessionHandlers() {
     // Formulario de login
     document.getElementById("login-form").addEventListener("submit", async (e) => {
         e.preventDefault();
-        const usernameVal = document.getElementById("login-username").value.trim().toLowerCase();
+        const usernameVal = document.getElementById("login-username").value.trim();
         const passwordVal = document.getElementById("login-password").value;
 
         try {

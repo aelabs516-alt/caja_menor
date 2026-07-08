@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Caja Menor | Tecnología & Movilidad</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💸</text></svg>">
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ================== PANTALLA DE INICIAR SESIÓN (LOGIN) ================== -->
+    <div class="login-screen-overlay" id="login-screen">
+        <div class="login-box-container">
+            <div class="login-logo-header">
+                <img src="logo.png" alt="Tecnología & Movilidad" class="company-logo-img" style="max-height: 120px; width: auto;">
+            </div>
+            
+            <div class="login-card">
+                <h2>Control de Caja Menor</h2>
+                <p class="login-card-subtitle">Por favor ingresa tus credenciales de acceso</p>
+                
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-username">Usuario *</label>
+                        <input type="text" id="login-username" class="form-control" placeholder="Nombre de usuario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Contraseña *</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    <div style="text-align: right; margin-top: -12px; margin-bottom: 15px;">
+                        <a href="#" id="forgot-password-link" style="color: var(--primary-color); font-size: 13px; text-decoration: none; font-weight: 500;">¿Olvidó su contraseña?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block-login">
+                        <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
+                    </button>
+                </form>
+            </div>
+
+            <!-- Demo accounts hint panel -->
+            <div class="demo-hints-panel">
+                <h4>Credenciales de Prueba:</h4>
+                <div class="hint-role-box">
+                    <span><strong>Administrador:</strong> admin / admin</span>
+                </div>
+                <div class="hint-role-box">
+                    <span><strong>Visualizador:</strong> invitado / 123</span>
+                </div>
+                <div class="hint-role-box">
+                    <span><strong>Operador Caja:</strong> operador / caja</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================== CONTENEDOR PRINCIPAL SPA ================== -->
+    <div class="app-container" id="main-app-layout" style="display: none;">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="logo.png" alt="Tecnología & Movilidad" class="company-logo-img" style="max-height: 120px; width: auto; padding: 5px;">
+                </div>
+                <button class="close-sidebar" id="closeSidebarBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="#dashboard" class="menu-item active" data-target="dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#usuarios" class="menu-item admin-only" id="menu-item-usuarios" data-target="usuarios">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <span>Usuarios</span>
+                </a>
+                <a href="#modulo0" class="menu-item" data-target="modulo0">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Colaboradores</span>
+                </a>
+                <a href="#modulo1" class="menu-item" data-target="modulo1">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span>Control caja menor</span>
+                </a>
+                <a href="#modulo2" class="menu-item" data-target="modulo2">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <span>Pago Pendientes</span>
+                </a>
+                <a href="#modulo3" class="menu-item" data-target="modulo3">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                    <span>Efectivo ventas</span>
+                </a>
+                <a href="#database" class="menu-item" data-target="database">
+                    <i class="fa-solid fa-database"></i>
+                    <span>base de Datos</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="theme-toggle-container">
+                    <i class="fa-solid fa-moon"></i>
+                    <span class="theme-label">Modo Oscuro</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot online"></span>
+                    <span class="status-label">Sistema Local Listo</span>
+                </div>
+                <div class="device-indicator" id="sidebarDeviceIndicator" style="display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 2px;">
+                    <!-- Dinámico -->
+                </div>
+                <div class="app-version">v3.0.0 - Roles RBAC</div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggleBtn">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <h1 class="page-title" id="pageTitle">Dashboard General</h1>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-info-badge device-badge" id="headerDeviceBadge">
+                        <!-- Dinámico -->
+                    </div>
+                    <div class="header-info-badge location-badge">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Medellín, Colombia</span>
+                    </div>
+                    <div class="header-info-badge clock-badge" id="colombiaClockBadge">
+                        <span class="clock-date-part"><i class="fa-solid fa-calendar-days"></i> Fecha: <span id="colombiaDate">Cargando fecha...</span></span>
+                        <span class="clock-separator">|</span>
+                        <span class="clock-time-part"><i class="fa-solid fa-clock"></i> Hora: <span id="colombiaTime">Cargando hora...</span></span>
+                    </div>
+                    <!-- Profile and Session Panel -->
+                    <div class="header-profile" id="userProfileBadge">
+                        <div class="profile-avatar">
+                            <i class="fa-solid fa-circle-user"></i>
+                        </div>
+                        <div class="profile-info">
+                            <span class="profile-name" id="session-userName">Cargando...</span>
+                            <span class="profile-role" id="session-userRole">Rol</span>
+                        </div>
+                        <button class="btn-logout" id="logoutBtn" title="Cerrar Sesión">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Container -->
+            <div class="content-wrapper">
+                
+                <!-- SECTION: DASHBOARD -->
+                <section id="sec-dashboard" class="content-section active">
+                    <!-- Viewer mode alert banner -->
+                    <div class="viewer-alert-banner" id="viewerAlertBanner" style="display:none;">
+                        <i class="fa-solid fa-eye"></i>
+                        <span><strong>Modo de Lectura Activo:</strong> Puedes explorar los datos y descargar respaldos, pero la creación, edición y eliminación de registros están deshabilitadas temporalmente por tu perfil.</span>
+                    </div>
+
+                    <!-- Metric Cards Grid -->
+                    <div class="metrics-grid">
+                        <div class="metric-card primary">
+                            <div class="metric-icon">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </div>
+                            <div class="metric-info">
+                                <h3>Saldo Actual</h3>
+                                <div class="metric-value" id="dash-saldo-actual">$ 0</div>
+                                <p class="metric-desc">Total Entradas - Salidas (Caja)</p>
+                            </div>
+                        </div>
+
+                        <div class="metric-card warning">
+                            <div class="metric-icon">
+                                <i class="fa-solid fa-receipt"></i>
+                            </div>
+                            <div class="metric-info">
+                                <h3>Gastos del Mes</h3>
+                                <div class="metric-value" id="dash-gastos-mes">$ 0</div>
+                                <p class="metric-desc">Suma de salidas del mes actual</p>
+                            </div>
+                        </div>
+
+                        <div class="metric-card success">
+                            <div class="metric-icon">
+                                <i class="fa-solid fa-cash-register"></i>
+                            </div>
+                            <div class="metric-info">
+                                <h3>Efectivo Ventas</h3>
+                                <div class="metric-value" id="dash-ventas-total">$ 0</div>
+                                <p class="metric-desc">Total recolectado por ventas</p>
+                            </div>
+                        </div>
+
+                        <div class="metric-card danger">
+                            <div class="metric-icon">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </div>
+                            <div class="metric-info">
+                                <h3>Pagos Pendientes</h3>
+                                <div class="metric-value" id="dash-pagos-pendientes">$ 0</div>
+                                <p class="metric-desc">Gastos reportados por pagar</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts & Recent Activities Row -->
+                    <div class="dashboard-row">
+                        <!-- Chart container -->
+                        <div class="dashboard-col chart-col">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2>Resumen Financiero</h2>
+                                    <span class="card-subtitle">Comparativo de transacciones</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="financialChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activities Container -->
+                        <div class="dashboard-col recent-col">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2>Últimos Movimientos</h2>
+                                    <span class="card-subtitle">Módulo 1: Control de Caja</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="recent-list-wrapper">
+                                        <ul class="recent-list" id="dash-recent-list">
+                                            <!-- Dynamically inserted -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION: MODULO 0 (PERSONAS Y PROVEEDORES) -->
+                <section id="sec-modulo0" class="content-section">
+                    <div class="card">
+                        <div class="card-header module-header">
+                            <div>
+                                <h2>Personas y Proveedores</h2>
+                                <p class="card-subtitle">Registro maestro de colaboradores (empleados, contratistas, proveedores y clientes)</p>
+                            </div>
+                            <button class="btn btn-primary btn-add admin-only" id="m0-btn-new">
+                                <i class="fa-solid fa-user-plus"></i> Nuevo Colaborador
+                            </button>
+                        </div>
+                        
+                        <!-- Table Filter toolbar -->
+                        <div class="table-toolbar">
+                            <div class="toolbar-search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="m0-search" placeholder="Buscar por nombre, NIT/documento, teléfono...">
+                            </div>
+                            <div class="toolbar-filters">
+                                <select id="m0-filter-tipo" class="form-control">
+                                    <option value="All">Todos los tipos</option>
+                                    <option value="Persona Natural">Personas Naturales</option>
+                                    <option value="Proveedor / Empresa">Proveedores / Empresas</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="card-body table-responsive">
+                            <table class="data-table" id="m0-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre / Razón Social</th>
+                                        <th>Tipo de Colaborador</th>
+                                        <th>Documento / NIT</th>
+                                        <th>Teléfono</th>
+                                        <th class="actions-column">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="m0-table-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                            <div class="no-data-msg" id="m0-no-data" style="display:none;">
+                                <i class="fa-solid fa-users-slash"></i>
+                                <p>No se encontraron colaboradores registrados</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- SECTION: MODULO 1 (CONTROL DE CAJA MENOR) -->
+                <section id="sec-modulo1" class="content-section">
+                    <div class="card">
+                        <div class="card-header module-header">
+                            <div>
+                                <h2>Control de Caja Menor</h2>
+                                <p class="card-subtitle">Registro principal de entradas y salidas de dinero</p>
+                            </div>
+                            <button class="btn btn-primary btn-add admin-only" id="m1-btn-new">
+                                <i class="fa-solid fa-plus"></i> Nuevo Registro
+                            </button>
+                        </div>
+                        
+                        <!-- Table Filter toolbar -->
+                        <div class="table-toolbar">
+                            <div class="toolbar-search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="m1-search" placeholder="Buscar por concepto, entregado, factura...">
+                            </div>
+                            <div class="toolbar-filters">
+                                <select id="m1-filter-tipo" class="form-control">
+                                    <option value="All">Todos los movimientos</option>
+                                    <option value="Entrada">Entradas</option>
+                                    <option value="Salida">Salidas</option>
+                                </select>
+                                <button class="btn btn-secondary" id="m1-btn-export-csv" title="Exportar a CSV">
+                                    <i class="fa-solid fa-file-csv"></i> Exportar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card-body table-responsive">
+                            <table class="data-table" id="m1-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Tipo</th>
+                                        <th>A quien se entrega</th>
+                                        <th>Concepto</th>
+                                        <th>Comercio</th>
+                                        <th>Factura</th>
+                                        <th>Recibo</th>
+                                        <th>Valor (Salida / Entrada)</th>
+                                        <th class="actions-column">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="m1-table-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                            <div class="no-data-msg" id="m1-no-data" style="display:none;">
+                                <i class="fa-solid fa-folder-open"></i>
+                                <p>No se encontraron registros en el Control de Caja</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- SECTION: MODULO 2 (PAGOS PENDIENTES) -->
+                <section id="sec-modulo2" class="content-section">
+                    <div class="card">
+                        <div class="card-header module-header">
+                            <div>
+                                <h2>Pagos Pendientes</h2>
+                                <p class="card-subtitle">Registro de gastos generados pendientes de pago</p>
+                            </div>
+                            <button class="btn btn-primary btn-add admin-only" id="m2-btn-new">
+                                <i class="fa-solid fa-plus"></i> Nuevo Pago Pendiente
+                            </button>
+                        </div>
+
+                        <!-- Table Filter toolbar -->
+                        <div class="table-toolbar">
+                            <div class="toolbar-search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="m2-search" placeholder="Buscar por proveedor, concepto...">
+                            </div>
+                            <div class="toolbar-filters">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="m2-filter-no-reportados" checked>
+                                    <span class="slider round"></span>
+                                    <span class="toggle-label">Mostrar solo no reportados</span>
+                                </label>
+                                <button class="btn btn-secondary" id="m2-btn-export-csv" title="Exportar a CSV">
+                                    <i class="fa-solid fa-file-csv"></i> Exportar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card-body table-responsive">
+                            <table class="data-table" id="m2-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Se debe a</th>
+                                        <th>Concepto</th>
+                                        <th>Factura</th>
+                                        <th>Recibo</th>
+                                        <th>Valor</th>
+                                        <th>Estado</th>
+                                        <th class="actions-column">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="m2-table-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                            <div class="no-data-msg" id="m2-no-data" style="display:none;">
+                                <i class="fa-solid fa-folder-open"></i>
+                                <p>No hay deudas o pagos pendientes registrados</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- SECTION: MODULO 3 (EFECTIVO VENTAS) -->
+                <section id="sec-modulo3" class="content-section">
+                    <div class="card">
+                        <div class="card-header module-header">
+                            <div>
+                                <h2>Efectivo por Ventas</h2>
+                                <p class="card-subtitle">Relación del dinero en efectivo ingresado por ventas</p>
+                            </div>
+                            <button class="btn btn-primary btn-add admin-only" id="m3-btn-new">
+                                <i class="fa-solid fa-plus"></i> Nuevo Registro de Ventas
+                            </button>
+                        </div>
+
+                        <!-- Table Filter toolbar -->
+                        <div class="table-toolbar">
+                            <div class="toolbar-search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="m3-search" placeholder="Buscar por quien entrega, concepto...">
+                            </div>
+                            <div class="toolbar-filters">
+                                <select id="m3-filter-estado" class="form-control">
+                                    <option value="All">Todos los estados</option>
+                                    <option value="Entregado">Entregado</option>
+                                    <option value="Pendiente">Pendiente</option>
+                                </select>
+                                <button class="btn btn-secondary" id="m3-btn-export-csv" title="Exportar a CSV">
+                                    <i class="fa-solid fa-file-csv"></i> Exportar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card-body table-responsive">
+                            <table class="data-table" id="m3-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha Recaudo</th>
+                                        <th>Quien entrega</th>
+                                        <th>Concepto</th>
+                                        <th>Valor</th>
+                                        <th>Estado</th>
+                                        <th>A quien se entregó</th>
+                                        <th>Fecha de entrega</th>
+                                        <th>Observaciones</th>
+                                        <th class="actions-column">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="m3-table-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                            <div class="no-data-msg" id="m3-no-data" style="display:none;">
+                                <i class="fa-solid fa-folder-open"></i>
+                                <p>No hay registros de recaudos de ventas</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION: MODULO USUARIOS (ADMIN-ONLY) -->
+                <section id="sec-usuarios" class="content-section">
+                    <div class="card">
+                        <div class="card-header module-header">
+                            <div>
+                                <h2>Control de Usuarios</h2>
+                                <p class="card-subtitle">Administra los usuarios del sistema y asigna privilegios de acceso (Roles)</p>
+                            </div>
+                            <button class="btn btn-primary btn-add" id="user-btn-new">
+                                <i class="fa-solid fa-user-plus"></i> Nuevo Usuario
+                            </button>
+                        </div>
+                        
+                        <div class="card-body table-responsive">
+                            <table class="data-table" id="user-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre Completo</th>
+                                        <th>Nombre de Usuario</th>
+                                        <th>Rol asignado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user-table-body">
+                                    <!-- Dynamic user rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION: BASE DE DATOS (IMPORTAR/EXPORTAR/RESET) -->
+                <section id="sec-database" class="content-section">
+                    <div class="card database-card">
+                        <div class="card-header">
+                            <h2>Administración de Datos del Sistema</h2>
+                            <p class="card-subtitle">Realiza copias de seguridad, restaura registros o limpia el almacenamiento local</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="database-grid">
+                                <div class="db-action-box">
+                                    <div class="db-icon"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+                                    <h3>Respaldar Base de Datos</h3>
+                                    <p>Descarga un archivo en formato JSON con toda la información registrada en el sistema de caja menor para guardarlo como copia de seguridad.</p>
+                                    <button class="btn btn-primary" id="db-btn-export">
+                                        <i class="fa-solid fa-download"></i> Descargar JSON
+                                    </button>
+                                </div>
+                                
+                                <div class="db-action-box admin-only">
+                                    <div class="db-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                                    <h3>Restaurar Base de Datos</h3>
+                                    <p>Carga un archivo JSON de respaldo previamente descargado para sobrescribir los datos actuales del sistema.</p>
+                                    <label for="db-file-import" class="btn btn-secondary btn-file-input" id="db-file-import-label">
+                                        <i class="fa-solid fa-upload"></i> Seleccionar Archivo
+                                    </label>
+                                    <input type="file" id="db-file-import" accept=".json" style="display:none;">
+                                    <span id="db-import-filename" class="file-name-hint">Ningún archivo seleccionado</span>
+                                </div>
+
+                                <div class="db-action-box danger-zone admin-only">
+                                    <div class="db-icon text-danger"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                                    <h3>Zona de Peligro</h3>
+                                    <p>Restablece el sistema a los valores de demostración iniciales de la empresa o vacía por completo el almacenamiento local.</p>
+                                    <div class="btn-group-danger">
+                                        <button class="btn btn-outline-danger" id="db-btn-reset-demo">Cargar Demo Semilla</button>
+                                        <button class="btn btn-danger" id="db-btn-clear-all">Borrar Todo</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ================== MODALES / FORMULARIOS ================== -->
+
+    <!-- MODAL USUARIOS: CREAR & EDITAR -->
+    <div class="modal-backdrop" id="user-modal">
+        <div class="modal-box" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3 id="user-modal-title">Nuevo Usuario</h3>
+                <button class="modal-close-btn m-close" data-modal="user-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="user-form">
+                <input type="hidden" id="user-field-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="user-field-nombre">Nombre Completo *</label>
+                        <input type="text" id="user-field-nombre" class="form-control" placeholder="Ej. Falcon Gómez" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-field-usuario">Nombre de Usuario *</label>
+                        <input type="text" id="user-field-usuario" class="form-control" placeholder="Ej. falcon" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user-field-contrasena">Contraseña *</label>
+                        <input type="password" id="user-field-contrasena" class="form-control" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user-field-rol">Rol / Nivel de Acceso *</label>
+                        <select id="user-field-rol" class="form-control" required>
+                            <option value="Administrador">Administrador (Control Total)</option>
+                            <option value="Visualización">Visualización (Lectura Única)</option>
+                            <option value="Operador de Módulo">Operador de Módulo (Escritura Restringida)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="user-module-group" style="display: none;">
+                        <label for="user-field-modulo">Módulo Asignado *</label>
+                        <select id="user-field-modulo" class="form-control">
+                            <option value="modulo0">Colaboradores (Módulo 0)</option>
+                            <option value="modulo1">Control caja menor (Módulo 1)</option>
+                            <option value="modulo2">Pago Pendientes (Módulo 2)</option>
+                            <option value="modulo3">Efectivo ventas (Módulo 3)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary m-close" data-modal="user-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Usuario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 0: REGISTRO DE COLABORADORES (CREAR & EDITAR) -->
+    <div class="modal-backdrop" id="m0-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="m0-modal-title">Nuevo Colaborador</h3>
+                <button class="modal-close-btn m-close" data-modal="m0-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="m0-form">
+                <input type="hidden" id="m0-field-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="m0-field-nombre">Nombre Completo o Razón Social *</label>
+                        <input type="text" id="m0-field-nombre" class="form-control" placeholder="Ej. Juan Pérez o Insumos S.A.S." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="m0-field-tipo">Tipo de Colaborador *</label>
+                        <select id="m0-field-tipo" class="form-control" required>
+                            <option value="Persona Natural">Persona Natural</option>
+                            <option value="Proveedor / Empresa">Proveedor / Empresa</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="m0-field-documento">Documento / NIT *</label>
+                            <input type="text" id="m0-field-documento" class="form-control" placeholder="Cédula o NIT" required>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="m0-field-telefono">Teléfono</label>
+                            <input type="text" id="m0-field-telefono" class="form-control" placeholder="Número de contacto">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary m-close" data-modal="m0-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Colaborador</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- MODAL 1: REGISTRO DE CAJA MENOR (CREAR & EDITAR) -->
+    <div class="modal-backdrop" id="m1-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="m1-modal-title">Nuevo Registro de Caja</h3>
+                <button class="modal-close-btn m-close" data-modal="m1-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="m1-form">
+                <input type="hidden" id="m1-field-id">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="m1-field-fecha">Fecha *</label>
+                            <input type="date" id="m1-field-fecha" class="form-control" required>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="m1-field-tipo">Tipo de Movimiento *</label>
+                            <select id="m1-field-tipo" class="form-control" required>
+                                <option value="Salida">Salida (Gasto)</option>
+                                <option value="Entrada">Entrada (Ingreso)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="m1-field-entregado">A quién se entrega *</label>
+                        <div class="form-select-group">
+                            <select id="m1-field-entregado" class="form-control" required>
+                                <!-- Dinámico -->
+                            </select>
+                            <button type="button" class="btn btn-secondary btn-quick-add admin-only" onclick="openQuickAddTercero('m1-field-entregado')" title="Creación Rápida de Colaborador">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="m1-field-concepto">Concepto / Detalle *</label>
+                        <textarea id="m1-field-concepto" class="form-control" rows="3" placeholder="Razón del movimiento..." required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="m1-field-valor">Valor ($ COP) *</label>
+                            <input type="text" inputmode="numeric" id="m1-field-valor" class="form-control" placeholder="Ej. 50.000" required>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="m1-field-comercio">Comercio / Establecimiento</label>
+                            <input type="text" id="m1-field-comercio" class="form-control" placeholder="Ej. Papelería SAS">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="m1-field-factura">Número de Factura</label>
+                            <input type="text" id="m1-field-factura" class="form-control" placeholder="Ej. FACT-1029">
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="m1-field-recibo">Número de Recibo / Soporte</label>
+                            <input type="text" id="m1-field-recibo" class="form-control" placeholder="Ej. REC-9382">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label for="m1-field-soporte">Imagen de Soporte (Máx. 10MB)</label>
+                        <input type="file" id="m1-field-soporte" class="form-control" accept="image/*" style="padding: 6px 12px; height: auto;">
+                        <small class="text-muted">Formatos: JPG, PNG, GIF. Tamaño máximo: 10MB.</small>
+                        <div id="m1-soporte-preview-container" style="display: none; margin-top: 10px; position: relative; width: fit-content;">
+                            <img id="m1-soporte-preview" src="" alt="Soporte" style="max-height: 100px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <button type="button" class="btn-delete-soporte" id="m1-btn-delete-soporte" title="Eliminar soporte" style="position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary m-close" data-modal="m1-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Registro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- MODAL 2: REGISTRO DE PAGOS PENDIENTES (CREAR & EDITAR) -->
+    <div class="modal-backdrop" id="m2-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="m2-modal-title">Nuevo Pago Pendiente</h3>
+                <button class="modal-close-btn m-close" data-modal="m2-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="m2-form">
+                <input type="hidden" id="m2-field-id">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="m2-field-fecha">Fecha de Adquisición *</label>
+                            <input type="date" id="m2-field-fecha" class="form-control" required>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="m2-field-valor">Valor ($ COP) *</label>
+                            <input type="text" inputmode="numeric" id="m2-field-valor" class="form-control" placeholder="Ej. 120.000" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="m2-field-debea">Se debe a (Proveedor / Persona) *</label>
+                        <div class="form-select-group">
+                            <select id="m2-field-debea" class="form-control" required>
+                                <!-- Dinámico -->
+                            </select>
+                            <button type="button" class="btn btn-secondary btn-quick-add admin-only" onclick="openQuickAddTercero('m2-field-debea')" title="Creación Rápida de Colaborador">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="m2-field-concepto">Concepto / Detalle de Deuda *</label>
+                        <textarea id="m2-field-concepto" class="form-control" rows="3" placeholder="Detalles del gasto pendiente..." required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="m2-field-factura">Número de Cobro / Factura</label>
+                            <input type="text" id="m2-field-factura" class="form-control" placeholder="Ej. F-3920">
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="m2-field-recibo">Número de Recibo / Soporte</label>
+                            <input type="text" id="m2-field-recibo" class="form-control" placeholder="Ej. REC-4820">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="toggle-switch inline-toggle">
+                            <input type="checkbox" id="m2-field-reportado">
+                            <span class="slider round"></span>
+                            <span class="toggle-label">¿Reportado / Pagado?</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label for="m2-field-soporte">Imagen de Soporte (Máx. 10MB)</label>
+                        <input type="file" id="m2-field-soporte" class="form-control" accept="image/*" style="padding: 6px 12px; height: auto;">
+                        <small class="text-muted">Formatos: JPG, PNG, GIF. Tamaño máximo: 10MB.</small>
+                        <div id="m2-soporte-preview-container" style="display: none; margin-top: 10px; position: relative; width: fit-content;">
+                            <img id="m2-soporte-preview" src="" alt="Soporte" style="max-height: 100px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <button type="button" class="btn-delete-soporte" id="m2-btn-delete-soporte" title="Eliminar soporte" style="position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary m-close" data-modal="m2-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Pago Pendiente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- MODAL 3: EFECTIVO RECIBIDO POR VENTAS (CREAR & EDITAR) -->
+    <div class="modal-backdrop" id="m3-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="m3-modal-title">Nuevo Efectivo Recibido por Ventas</h3>
+                <button class="modal-close-btn m-close" data-modal="m3-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="m3-form">
+                <input type="hidden" id="m3-field-id">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="m3-field-fecha">Fecha Recaudo *</label>
+                            <input type="date" id="m3-field-fecha" class="form-control" required>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="m3-field-valor">Valor Recibido ($ COP) *</label>
+                            <input type="text" inputmode="numeric" id="m3-field-valor" class="form-control" placeholder="Monto recolectado" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="m3-field-entrega">Quien entrega (Cajero / Responsable) *</label>
+                        <div class="form-select-group">
+                            <select id="m3-field-entrega" class="form-control" required>
+                                <!-- Dinámico -->
+                            </select>
+                            <button type="button" class="btn btn-secondary btn-quick-add admin-only" onclick="openQuickAddTercero('m3-field-entrega')" title="Creación Rápida de Colaborador">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="m3-field-concepto">Concepto / Detalle de Ventas *</label>
+                        <textarea id="m3-field-concepto" class="form-control" rows="2" placeholder="Detalle del recaudo..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="toggle-switch inline-toggle">
+                            <input type="checkbox" id="m3-field-entregado">
+                            <span class="slider round"></span>
+                            <span class="toggle-label">¿Entregado / Depositado?</span>
+                        </label>
+                    </div>
+
+                    <!-- Conditionally shown block if checkbox is checked -->
+                    <div class="conditional-fields" id="m3-entregado-group" style="display:none;">
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label for="m3-field-entregadoa">A quién se entregó</label>
+                                <div class="form-select-group">
+                                    <select id="m3-field-entregadoa" class="form-control">
+                                        <!-- Dinámico -->
+                                    </select>
+                                    <button type="button" class="btn btn-secondary btn-quick-add admin-only" onclick="openQuickAddTercero('m3-field-entregadoa')" title="Creación Rápida de Colaborador">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="m3-field-fechaentrega">Fecha de entrega</label>
+                                <input type="date" id="m3-field-fechaentrega" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="m3-field-observaciones">Observaciones / Descuadres</label>
+                        <textarea id="m3-field-observaciones" class="form-control" rows="2" placeholder="Detalles de descuadre o notas del depósito..."></textarea>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label for="m3-field-soporte">Imagen de Soporte (Máx. 10MB)</label>
+                        <input type="file" id="m3-field-soporte" class="form-control" accept="image/*" style="padding: 6px 12px; height: auto;">
+                        <small class="text-muted">Formatos: JPG, PNG, GIF. Tamaño máximo: 10MB.</small>
+                        <div id="m3-soporte-preview-container" style="display: none; margin-top: 10px; position: relative; width: fit-content;">
+                            <img id="m3-soporte-preview" src="" alt="Soporte" style="max-height: 100px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <button type="button" class="btn-delete-soporte" id="m3-btn-delete-soporte" title="Eliminar soporte" style="position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary m-close" data-modal="m3-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Ventas</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MINI MODAL: CREACIÓN RÁPIDA DE COLABORADORES (EN SEGUNDO PLANO) -->
+    <div class="modal-backdrop" id="quick-tercero-modal" style="z-index: 1050;">
+        <div class="modal-box" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3>Creación Rápida de Colaborador</h3>
+                <button class="modal-close-btn m-close" data-modal="quick-tercero-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="quick-tercero-form">
+                <input type="hidden" id="quick-tercero-target-field">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="qt-field-nombre">Nombre Completo *</label>
+                        <input type="text" id="qt-field-nombre" class="form-control" placeholder="Ej. Carlos Mendoza" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="qt-field-tipo">Tipo de Colaborador *</label>
+                        <select id="qt-field-tipo" class="form-control" required>
+                            <option value="Persona Natural">Persona Natural</option>
+                            <option value="Proveedor / Empresa">Proveedor / Empresa</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="qt-field-documento">Documento / NIT *</label>
+                        <input type="text" id="qt-field-documento" class="form-control" placeholder="NIT o Cédula" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="qt-field-telefono">Teléfono</label>
+                        <input type="text" id="qt-field-telefono" class="form-control" placeholder="Ej. 3001234567">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary m-close" data-modal="quick-tercero-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar y Seleccionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- LIGHTBOX MODAL: VISUALIZAR SOPORTE -->
+    <div class="modal-backdrop" id="lightbox-modal">
+        <div class="modal-box" style="max-width: 90%; width: auto; background: transparent; box-shadow: none; border: none; position: relative;">
+            <button class="modal-close-btn m-close" data-modal="lightbox-modal" style="top: -15px; right: -15px; color: white; background: rgba(0,0,0,0.5); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 16px;"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-body" style="padding: 0; display: flex; justify-content: center; align-items: center;">
+                <img id="lightbox-img" src="" alt="Soporte" style="max-height: 85vh; max-width: 100%; border-radius: var(--radius-md); border: 2px solid white; background-color: #000;">
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: OLVIDÉ MI CONTRASEÑA -->
+    <div class="modal-backdrop" id="forgot-password-modal">
+        <div class="modal-box" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3>Recuperar Contraseña</h3>
+                <button class="modal-close-btn m-close" data-modal="forgot-password-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="text-align: center; padding: 20px;">
+                <div style="font-size: 40px; color: var(--primary-color); margin-bottom: 15px;">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <h4 style="margin-bottom: 10px; font-weight: 600;">¿Olvidaste tu contraseña?</h4>
+                <p style="font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 15px;">
+                    Por razones de seguridad y al ser una aplicación local (sin servidor de correo externo), debes solicitar a un <strong>Administrador del sistema</strong> que restablezca tu contraseña desde el módulo de usuarios.
+                </p>
+                <div class="alert alert-info" style="border: 1px solid var(--border-color); color: var(--text-color); background: rgba(59, 130, 246, 0.1); padding: 12px; border-radius: var(--radius-sm); font-size: 13px; text-align: left; margin-bottom: 0;">
+                    <i class="fa-solid fa-circle-info" style="color: var(--primary-color); margin-right: 5px;"></i>
+                    Si eres el administrador principal y olvidaste tus datos de acceso, puedes restablecer las credenciales semilla borrando los datos del navegador (localStorage) o utilizando el usuario de prueba <code>admin</code> con la contraseña <code>admin</code>.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary m-close" data-modal="forgot-password-modal" style="width: 100%;">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>

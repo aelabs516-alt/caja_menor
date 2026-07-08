@@ -866,8 +866,9 @@ function renderDashboardMetrics() {
         cardElement.style.border = "1px solid var(--border-color)";
     }
 
-    const currentYearStr = "2026";
-    const currentMonthStr = "06";
+    const today = new Date();
+    const currentYearStr = today.getFullYear().toString();
+    const currentMonthStr = String(today.getMonth() + 1).padStart(2, '0');
 
     let gastosMes = 0;
     state.modulo1.forEach(item => {

@@ -975,16 +975,16 @@ function renderCharts() {
                 label: 'Monto total en COP',
                 data: [entradas, salidas, ventasEntregadas, ventasPendientes],
                 backgroundColor: [
-                    'rgba(16, 185, 129, 0.7)',
-                    'rgba(239, 110, 110, 0.7)',
-                    'rgba(0, 143, 138, 0.7)',
-                    'rgba(245, 158, 11, 0.7)'
+                    'rgba(16, 185, 129, 0.7)',  // Verde
+                    'rgba(245, 158, 11, 0.7)',  // Amarillo
+                    'rgba(59, 130, 246, 0.7)',  // Azul
+                    'rgba(59, 130, 246, 0.7)'   // Azul
                 ],
                 borderColor: [
                     '#10b981',
-                    '#ef4444',
-                    '#008f8a',
-                    '#f59e0b'
+                    '#f59e0b',
+                    '#3b82f6',
+                    '#3b82f6'
                 ],
                 borderWidth: 1.5,
                 borderRadius: 6
@@ -1839,7 +1839,7 @@ async function quickConfirmDeliveryM3(id) {
     const tesoreria = state.modulo0.find(item => item.nombre.includes("Tesorería"));
     const entregadoAVal = tesoreria ? tesoreria.id : "t2";
     const fechaEntregaVal = new Date().toISOString().split('T')[0];
-    const rawId = id.startsWith("m3_") ? id.slice(3) : id;
+    const rawId = id.startsWith("v_") ? id.slice(2) : id;
 
     try {
         const res = await fetch(`/api/ventas/${rawId}/`, {
@@ -2077,6 +2077,18 @@ function setupFormHandlers() {
         } catch (err) {
             console.error(err);
             showToast("Error de conexión.", "danger");
+        }
+    });
+
+    // MÓDULO 3: TOGGLE ENTREGADO/DEPOSITADO
+    document.getElementById("m3-field-entregado").addEventListener("change", (e) => {
+        const group = document.getElementById("m3-entregado-group");
+        if (e.target.checked) {
+            group.style.display = "block";
+        } else {
+            group.style.display = "none";
+            document.getElementById("m3-field-entregadoa").value = "";
+            document.getElementById("m3-field-fechaentrega").value = "";
         }
     });
 
